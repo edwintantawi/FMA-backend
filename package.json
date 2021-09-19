@@ -1,0 +1,68 @@
+{
+  "name": "farm-management-app-backend",
+  "version": "1.0.0",
+  "description": "Backend application for Farm Management Application.",
+  "main": "build/server.js",
+  "scripts": {
+    "start": "npm run build && npm run serve",
+    "build": "npm run clean && tsc && npm run tools:copy",
+    "dev": "ts-node-dev --respawn src/server.ts",
+    "serve": "node build/server.js",
+    "clean": "rimraf build",
+    "tools:copy": "ts-node tools/copyAssets.ts",
+    "lint": "eslint . --ext .ts",
+    "test": "jest --detectOpenHandles"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edwintantawi/FMA-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/edwintantawi/FMA-backend/issues"
+  },
+  "homepage": "https://github.com/edwintantawi/FMA-backend#readme",
+  "dependencies": {
+    "bcrypt": "5.0.1",
+    "cookie-parser": "1.4.5",
+    "cors": "2.8.5",
+    "dotenv": "10.0.0",
+    "ejs": "3.1.6",
+    "express": "4.17.1",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "8.5.1",
+    "module-alias": "^2.2.2",
+    "mongoose": "6.0.6",
+    "shelljs": "0.8.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "5.0.0",
+    "@types/cookie-parser": "1.4.2",
+    "@types/cors": "2.8.12",
+    "@types/express": "4.17.13",
+    "@types/jest": "27.0.1",
+    "@types/jsonwebtoken": "8.5.5",
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "16.9.2",
+    "@types/shelljs": "0.8.9",
+    "@types/supertest": "2.0.11",
+    "@typescript-eslint/eslint-plugin": "4.31.1",
+    "@typescript-eslint/parser": "4.31.1",
+    "eslint": "7.32.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-jest": "^24.4.2",
+    "eslint-plugin-prettier": "4.0.0",
+    "jest": "27.2.0",
+    "prettier": "2.4.1",
+    "rimraf": "3.0.2",
+    "supertest": "6.1.6",
+    "ts-jest": "27.0.5",
+    "ts-node": "10.2.1",
+    "ts-node-dev": "1.1.8",
+    "typescript": "4.4.3"
+  }
+}

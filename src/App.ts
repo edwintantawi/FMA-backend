@@ -1,0 +1,58 @@
+import path from 'path';
+import express, { Application } from 'express';
+import cookieParser from 'cookie-parser';
+import cors, { CorsOptions } from 'cors';
+import { Server } from 'http';
+import helmet from 'helmet';
+import { AppRoutes } from '@routes/index';
+
+interface IApp {
+  corsOptions: CorsOptions;
+}
+
+export class App {
+  private app: Application;
+
+  private corsOptions: CorsOptions;
+
+  constructor({ corsOptions }: IApp) {
+    this.corsOptions = corsOptions;
+    this.app = express();
+    this.settings();
+    this.plugins();
+    this.routes();
+  }
+
+  get context(): Application {
+    return this.app;
+  }
+
+  plugins(): void {
+    console.log('App : Plugins is ready');
+
+    this.app.use(helmet());
+    this.app.use(cors(this.corsOptions));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.static(path.join(__dirname, 'public')));
+    this.app.use(cookieParser());
+  }
+
+  settings(): void {
+    console.log('App : Settings is ready');
+
+    this.app.set('views', path.join(__dirname, 'views'));
+    this.app.set('view engine', 'ejs');
+  }
+
+  routes(): void {
+    console.log('App : Routes is ready');
+
+    const appRoutes = new AppRoutes(this.app);
+    appRoutes.setup();
+  }
+
+  listen(port: number | string, callback: () => void): Server {
+    return this.app.listen(port, callback);
+  }
+}

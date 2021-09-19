@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+}
+
+body {
+  text-align: center;
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+h1,
+p {
+  text-align: center;
+}
+
+h1,
+p,
+img {
+  margin-bottom: 0.5rem;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+}

@@ -4,7 +4,8 @@ import cookieParser from 'cookie-parser';
 import cors, { CorsOptions } from 'cors';
 import { Server } from 'http';
 import helmet from 'helmet';
-import { AppRoutes } from '@routes/index';
+import { AppRoutes } from './routes';
+import { TPort } from './typings';
 
 interface IApp {
   corsOptions: CorsOptions;
@@ -52,7 +53,7 @@ export class App {
     appRoutes.setup();
   }
 
-  listen(port: number | string, callback: () => void): Server {
+  listen(port: TPort, callback: () => void): Server {
     return this.app.listen(port, callback);
   }
 }

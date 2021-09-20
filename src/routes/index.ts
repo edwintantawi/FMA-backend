@@ -1,5 +1,5 @@
 import { Application } from 'express';
-import homeRouter from '@routes/home.router';
+import homeRouter from './home.router';
 
 export class AppRoutes {
   constructor(private app: Application) {}

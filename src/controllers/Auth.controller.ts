@@ -3,6 +3,7 @@ import { DataValidator, Bcrypt } from '../helpers';
 import { UserModel } from '../models';
 import {
   EMessages,
+  ILogin,
   IPublicUserData,
   IRegister,
   IResponse,
@@ -11,8 +12,8 @@ import {
 
 export class AuthController {
   static async register(req: Request, res: Response) {
-    const { farm, email, name, password, confirmPassword }: IRegister =
-      req.body;
+    const { farm, email, name, password, confirmPassword } =
+      req.body as IRegister;
 
     // if require data not exists
     if (!farm || !email || !name || !password || !confirmPassword) {
@@ -27,7 +28,7 @@ export class AuthController {
     // validate data
     if (
       !DataValidator.validateEmail(email) ||
-      !DataValidator.compare(password, confirmPassword) ||
+      !DataValidator.compareString(password, confirmPassword) ||
       !DataValidator.validateLength(farm, { minLength: 2, maxLength: 20 }) ||
       !DataValidator.validateLength(name, { minLength: 2, maxLength: 20 }) ||
       !DataValidator.validateLength(password, { minLength: 8, maxLength: 20 })
@@ -42,8 +43,8 @@ export class AuthController {
 
     try {
       // Hash password
-      const hashedPassword = Bcrypt.hashPassword(password);
-      const userDoc: IUser = { farm, name, email, password: hashedPassword };
+      const encryptedPassword = Bcrypt.encryptPassword(password);
+      const userDoc: IUser = { farm, name, email, password: encryptedPassword };
 
       // create user
       const user = await UserModel.create(userDoc);
@@ -72,12 +73,55 @@ export class AuthController {
       // user already exist
       if (error.code === 11000) {
         response.data = null;
-        response.message = EMessages.ERR_USER_EXIST;
+        response.message = EMessages.ERR_USER_ALREADY_EXIST;
         return res.status(401).json(response);
       }
 
       // server error
       return res.status(500).json(response);
     }
+  }
+
+  static async login(req: Request, res: Response) {
+    const { email, password } = req.body as ILogin;
+
+    // if require data not exists
+    if (!email || !password) {
+      const response: IResponse = {
+        error: true,
+        message: EMessages.ERR_BAD_DATA,
+        data: null,
+      };
+      return res.status(401).json(response);
+    }
+
+    // check user
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      const response: IResponse = {
+        error: true,
+        message: EMessages.ERR_LOGIN_USER_NOT_FOUND,
+        data: null,
+      };
+      return res.status(401).json(response);
+    }
+
+    // check password
+    const isMatchPassword = Bcrypt.comparePassword(password, user.password);
+
+    if (!isMatchPassword) {
+      const response: IResponse = {
+        error: true,
+        message: EMessages.ERR_LOGIN_WRONG_PASSWORD,
+        data: null,
+      };
+      return res.status(401).json(response);
+    }
+
+    // TODO: Create access & refresh token
+    // TODO: Save refresh token to db
+    // TODO: Serve access & refresh token to client
+
+    return res.status(200).json({ message: 'ok' });
   }
 }

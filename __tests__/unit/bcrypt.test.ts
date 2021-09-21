@@ -9,7 +9,23 @@ describe('Test Bcrypt method', () => {
 
   it('should hash the password', () => {
     const unsecurePassword = mockUser.password;
-    const securePassword = Bcrypt.hashPassword(unsecurePassword);
-    expect(securePassword).not.toBe(unsecurePassword);
+    const encryptedPassword = Bcrypt.encryptPassword(unsecurePassword);
+    expect(encryptedPassword).not.toBe(unsecurePassword);
+  });
+
+  it('should return false if compare not match', () => {
+    const encryptedPassword = Bcrypt.encryptPassword(mockUser.password);
+    const passwordToCompare = 'notmatchpassword';
+    const result = Bcrypt.comparePassword(passwordToCompare, encryptedPassword);
+
+    expect(result).toBeFalsy();
+  });
+
+  it('should return true if compare is match', () => {
+    const encryptedPassword = Bcrypt.encryptPassword(mockUser.password);
+    const passwordToCompare = mockUser.password;
+    const result = Bcrypt.comparePassword(passwordToCompare, encryptedPassword);
+
+    expect(result).toBeTruthy();
   });
 });

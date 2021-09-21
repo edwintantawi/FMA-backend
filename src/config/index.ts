@@ -10,7 +10,7 @@ export const ENV = {
   appOrigin: env.APP_ORIGIN || '',
   mongoDbName: env.MONGO_DB_NAME || 'unknown',
   mongoDbUrl: env.MONGO_DB_URL || '',
-  bcryptSaltSize: env.BCRYPT_SALT_SIZE || 0,
+  bcryptSaltSize: parseInt(env.BCRYPT_SALT_SIZE || '0', 10),
   jwtAccessTokenKey: env.JWT_ACCESS_TOKEN_KEY || '',
   jwtRefreshTokenKey: env.JWT_REFRESH_TOKEN_KEY || '',
 };

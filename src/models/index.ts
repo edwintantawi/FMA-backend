@@ -1,1 +1,1 @@
-// models
+export * from './User.model';

@@ -20,7 +20,7 @@ export class App {
     this.corsOptions = corsOptions;
     this.app = express();
     this.settings();
-    this.plugins();
+    this.middlewares();
     this.routes();
   }
 
@@ -28,8 +28,8 @@ export class App {
     return this.app;
   }
 
-  plugins(): void {
-    console.log('App : Plugins is ready');
+  middlewares(): void {
+    console.log('App : Middlewares is ready');
 
     this.app.use(helmet());
     this.app.use(cors(this.corsOptions));

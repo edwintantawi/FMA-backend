@@ -100,7 +100,7 @@ describe('Test DataValidator helper', () => {
       const leftHand = 'texttocompare';
       const rightHand = 'texttocomparenotmatch';
 
-      const result = DataValidator.compare(leftHand, rightHand);
+      const result = DataValidator.compareString(leftHand, rightHand);
       expect(result).toBeFalsy();
     });
 
@@ -108,7 +108,7 @@ describe('Test DataValidator helper', () => {
       const leftHand = 'texttocompare';
       const rightHand = 'texttocompare';
 
-      const result = DataValidator.compare(leftHand, rightHand);
+      const result = DataValidator.compareString(leftHand, rightHand);
       expect(result).toBeTruthy();
     });
   });

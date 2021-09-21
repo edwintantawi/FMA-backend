@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { UserModel } from '../../src/models';
 import {
   EMessages,
   IPublicUserData,
@@ -6,8 +7,7 @@ import {
   IResponse,
 } from '../../src/typings';
 import { app } from '../appSetup';
-import { mockUser, endpoints, DatabaseHelper } from '../helpers';
-import { AuthHelper } from '../helpers/AuthHelper';
+import { mockUser, endpoints, DatabaseHelper, AuthHelper } from '../helpers';
 
 beforeAll(async () => {
   await DatabaseHelper.disconnectDB();
@@ -184,7 +184,6 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
     expect(data).toBe(null);
   });
 
-  // TODO: Fix test
   it('should error if user already exist', async () => {
     const reqBody: IRegister = mockUser;
 
@@ -201,6 +200,17 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
     expect(statusCode).toBe(401);
     expect(error).toBeTruthy();
     expect(data).toBe(null);
+  });
+
+  it('should save hased password to db', async () => {
+    const reqBody: IRegister = mockUser;
+
+    await AuthHelper.registerUser(app, reqBody);
+
+    // password must hashed to db
+    const user = await UserModel.findOne({ email: reqBody.email });
+
+    expect(user?.password).not.toBe(reqBody.password);
   });
 
   it('should success if user first time register', async () => {

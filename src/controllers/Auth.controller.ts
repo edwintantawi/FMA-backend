@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DataValidator } from '../helpers/DataValidator';
+import { DataValidator, Bcrypt } from '../helpers';
 import { UserModel } from '../models';
 import {
   EMessages,
@@ -41,9 +41,11 @@ export class AuthController {
     }
 
     try {
+      // Hash password
+      const hashedPassword = Bcrypt.hashPassword(password);
+      const userDoc: IUser = { farm, name, email, password: hashedPassword };
+
       // create user
-      // TODO: Hash password
-      const userDoc: IUser = { farm, name, email, password };
       const user = await UserModel.create(userDoc);
 
       const data: IPublicUserData = {

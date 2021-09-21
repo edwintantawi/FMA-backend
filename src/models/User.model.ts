@@ -1,5 +1,7 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 import { IUser } from '../typings';
+
+interface IUserModel extends IUser, Document {}
 
 const UserSchema = new Schema(
   {
@@ -24,4 +26,4 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserModel = model<IUser>('Users', UserSchema);
+export const UserModel = model<IUserModel>('Users', UserSchema);

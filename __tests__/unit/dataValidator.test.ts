@@ -1,4 +1,4 @@
-import { DataValidator } from '../../src/helpers/DataValidator';
+import { DataValidator } from '../../src/helpers';
 
 describe('Test DataValidator helper', () => {
   describe('Test validateLength method', () => {

@@ -33,6 +33,7 @@
     "jest/valid-expect": "error",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "no-prototype-builtins": "off"
   }
 }

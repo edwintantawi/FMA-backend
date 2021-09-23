@@ -128,15 +128,20 @@ export class AuthController {
         email: user.email,
       };
 
-      // Create access & refresh token
+      // create access & refresh token
       const { accessToken, refreshToken } = Jwt.createTokens(payload);
-      // Save refresh token to db
+      // set all token related with this user used
+      await TokenModel.updateMany(
+        { uid: user._id, isUsed: false },
+        { isUsed: true }
+      );
+      // save refresh token to db
       const tokenDoc: ITokenDB = {
         uid: user._id,
         token: refreshToken,
       };
       await TokenModel.create(tokenDoc);
-      // Serve access & refresh token to client
+      // serve access & refresh token to client
       res.cookie(CONFIG.jwtAccessTokenName, accessToken);
       res.cookie(CONFIG.jwtRefreshTokenName, refreshToken);
 

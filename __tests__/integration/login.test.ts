@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { CONFIG } from '../../src/config';
+import { TokenModel } from '../../src/models';
 import {
   EMessages,
   ILogin,
@@ -130,5 +131,12 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
 
     expect(accessTokenCookie?.value).toBeTruthy();
     expect(refreshTokenCookie?.value).toBeTruthy();
+
+    const savedToken = await TokenModel.findOne({
+      uid: data.uid,
+      token: refreshTokenCookie?.value,
+      isUsed: false,
+    });
+    expect(savedToken).toBeTruthy();
   });
 });

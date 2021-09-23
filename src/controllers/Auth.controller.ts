@@ -136,9 +136,9 @@ export class AuthController {
         token: refreshToken,
       };
       await TokenModel.create(tokenDoc);
-      // TODO: Serve access & refresh token to client
+      // Serve access & refresh token to client
       res.cookie(CONFIG.jwtAccessTokenName, accessToken);
-      // res.cookie(CONFIG.jwtRefreshTokenName, refreshToken);
+      res.cookie(CONFIG.jwtRefreshTokenName, refreshToken);
 
       const response: IResponse = {
         error: false,

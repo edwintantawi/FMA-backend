@@ -5,5 +5,6 @@ export enum EMessages {
   ERR_SERVER = 'Server Error',
   ERR_LOGIN_USER_NOT_FOUND = 'Login fail, User not exist',
   ERR_LOGIN_WRONG_PASSWORD = 'Login fail, Password not match',
-  OK_REGISTER = 'Register successful',
+  OK_REGISTER = 'Register success',
+  OK_LOGIN = 'Login success',
 }

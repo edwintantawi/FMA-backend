@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
-import { DataValidator, Bcrypt } from '../helpers';
-import { UserModel } from '../models';
+import { DataValidator, Bcrypt, Jwt } from '../utils';
+import { TokenModel, UserModel } from '../models';
 import {
   EMessages,
   ILogin,
   IPublicUserData,
   IRegister,
   IResponse,
+  ITokenDB,
   IUser,
 } from '../typings';
+import { CONFIG } from '../config';
 
 export class AuthController {
   static async register(req: Request, res: Response) {
@@ -95,33 +97,63 @@ export class AuthController {
       return res.status(401).json(response);
     }
 
-    // check user
-    const user = await UserModel.findOne({ email });
-    if (!user) {
+    try {
+      // check user
+      const user = await UserModel.findOne({ email });
+      if (!user) {
+        const response: IResponse = {
+          error: true,
+          message: EMessages.ERR_LOGIN_USER_NOT_FOUND,
+          data: null,
+        };
+        return res.status(401).json(response);
+      }
+
+      // check password
+      const isMatchPassword = Bcrypt.comparePassword(password, user.password);
+
+      if (!isMatchPassword) {
+        const response: IResponse = {
+          error: true,
+          message: EMessages.ERR_LOGIN_WRONG_PASSWORD,
+          data: null,
+        };
+        return res.status(401).json(response);
+      }
+
+      const payload: IPublicUserData = {
+        uid: user._id,
+        name: user.name,
+        farm: user.farm,
+        email: user.email,
+      };
+
+      // Create access & refresh token
+      const { accessToken, refreshToken } = Jwt.createTokens(payload);
+      // Save refresh token to db
+      const tokenDoc: ITokenDB = {
+        uid: user._id,
+        token: refreshToken,
+      };
+      await TokenModel.create(tokenDoc);
+      // TODO: Serve access & refresh token to client
+      res.cookie(CONFIG.jwtAccessTokenName, accessToken);
+      // res.cookie(CONFIG.jwtRefreshTokenName, refreshToken);
+
+      const response: IResponse = {
+        error: false,
+        message: EMessages.OK_LOGIN,
+        data: payload,
+      };
+
+      return res.status(200).json(response);
+    } catch (error) {
       const response: IResponse = {
         error: true,
-        message: EMessages.ERR_LOGIN_USER_NOT_FOUND,
+        message: EMessages.ERR_SERVER,
         data: null,
       };
-      return res.status(401).json(response);
+      return res.status(500).json(response);
     }
-
-    // check password
-    const isMatchPassword = Bcrypt.comparePassword(password, user.password);
-
-    if (!isMatchPassword) {
-      const response: IResponse = {
-        error: true,
-        message: EMessages.ERR_LOGIN_WRONG_PASSWORD,
-        data: null,
-      };
-      return res.status(401).json(response);
-    }
-
-    // TODO: Create access & refresh token
-    // TODO: Save refresh token to db
-    // TODO: Serve access & refresh token to client
-
-    return res.status(200).json({ message: 'ok' });
   }
 }

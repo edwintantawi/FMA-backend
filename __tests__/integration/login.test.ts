@@ -1,13 +1,21 @@
 import request from 'supertest';
+import { CONFIG } from '../../src/config';
 import { UserModel } from '../../src/models';
-import { EMessages, ILogin, IResponse } from '../../src/typings';
+import {
+  EMessages,
+  ILogin,
+  IResponse,
+  IPublicUserData,
+} from '../../src/typings';
+import { Cookies } from '../../src/utils';
 import { app } from '../appSetup';
-import { DatabaseHelper, endpoints, mockUser } from '../helpers';
+import { AuthHelper, DatabaseHelper, endpoints, mockUser } from '../helpers';
 
 beforeAll(async () => {
   await DatabaseHelper.disconnectDB();
   await DatabaseHelper.connectDB();
-  await UserModel.create(mockUser);
+  // register initial user
+  await AuthHelper.registerUser(app, mockUser);
 });
 
 afterAll(async () => {
@@ -17,7 +25,7 @@ afterAll(async () => {
 
 describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
   it('should error if email data not exist', async () => {
-    const reqBody: ILogin = { ...mockUser, email: '' };
+    const reqBody: ILogin = { email: '', password: mockUser.password };
 
     const response = await request(app)
       .post(endpoints.AUTH_LOGIN)
@@ -33,7 +41,7 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
   });
 
   it('should error if password data not exist', async () => {
-    const reqBody: ILogin = { ...mockUser, password: '' };
+    const reqBody: ILogin = { email: mockUser.email, password: '' };
 
     const response = await request(app)
       .post(endpoints.AUTH_LOGIN)
@@ -49,7 +57,10 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
   });
 
   it('should error if user not exist', async () => {
-    const reqBody: ILogin = { ...mockUser, email: 'anothernewuser@user.com' };
+    const reqBody: ILogin = {
+      email: 'anothernewuser@user.com',
+      password: mockUser.password,
+    };
 
     const response = await request(app)
       .post(endpoints.AUTH_LOGIN)
@@ -65,7 +76,10 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
   });
 
   it('should error if password not match', async () => {
-    const reqBody: ILogin = { ...mockUser, password: 'notmatchpassword' };
+    const reqBody: ILogin = {
+      email: mockUser.email,
+      password: 'notmatchpassword',
+    };
 
     const response = await request(app)
       .post(endpoints.AUTH_LOGIN)
@@ -80,6 +94,42 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
     expect(data).toBe(null);
   });
 
-  // TODO: add test
-  // it('should success login and get token cookies', async () => {});
+  it('should success login and get token cookies', async () => {
+    const reqBody: ILogin = {
+      email: mockUser.email,
+      password: mockUser.password,
+    };
+
+    const response = await request(app)
+      .post(endpoints.AUTH_LOGIN)
+      .send(reqBody);
+
+    const { statusCode, body, headers } = response;
+    const { error, message, data } = body as IResponse;
+    const cookies = Cookies.getCookies(headers['set-cookie']);
+
+    expect(message).toBe(EMessages.OK_LOGIN);
+    expect(statusCode).toBe(200);
+    expect(error).toBeFalsy();
+
+    const expectData: IPublicUserData = {
+      uid: data.uid,
+      farm: mockUser.farm,
+      name: mockUser.name,
+      email: mockUser.email,
+    };
+
+    expect(data).toStrictEqual(expectData);
+
+    const accessTokenCookie = cookies.find(
+      (cookie) => cookie.key === CONFIG.jwtAccessTokenName
+    );
+
+    const refreshTokenCookie = cookies.find(
+      (cookie) => cookie.key === CONFIG.jwtRefreshTokenName
+    );
+
+    expect(accessTokenCookie?.value).toBeTruthy();
+    expect(refreshTokenCookie?.value).toBeFalsy();
+  });
 });

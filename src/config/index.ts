@@ -5,7 +5,7 @@ dotenv.config({ path: '.env' });
 
 const { env } = process;
 
-export const ENV = {
+const ENV = {
   port: env.PORT || 5000,
   appOrigin: env.APP_ORIGIN || '',
   mongoDbName: env.MONGO_DB_NAME || 'unknown',
@@ -20,6 +20,15 @@ const corsOptions: CorsOptions = {
   credentials: true,
 };
 
+const jwtOptions = {
+  jwtAccessTokenName: 'accessToken',
+  jwtRefreshTokenName: 'refreshToken',
+  jwtAccesTokenExpired: 1000 * 10, // 10 seconds
+  jwtRefreshTokenExpired: 1000 * 60 * 60 * 24 * 31, // 31 days
+};
+
 export const CONFIG = {
   corsOptions,
+  ...jwtOptions,
+  ...ENV,
 };

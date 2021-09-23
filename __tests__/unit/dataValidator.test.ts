@@ -1,4 +1,4 @@
-import { DataValidator } from '../../src/helpers';
+import { DataValidator } from '../../src/utils';
 
 describe('Test DataValidator helper', () => {
   describe('Test validateLength method', () => {
@@ -100,7 +100,7 @@ describe('Test DataValidator helper', () => {
       const leftHand = 'texttocompare';
       const rightHand = 'texttocomparenotmatch';
 
-      const result = DataValidator.compare(leftHand, rightHand);
+      const result = DataValidator.compareString(leftHand, rightHand);
       expect(result).toBeFalsy();
     });
 
@@ -108,7 +108,7 @@ describe('Test DataValidator helper', () => {
       const leftHand = 'texttocompare';
       const rightHand = 'texttocompare';
 
-      const result = DataValidator.compare(leftHand, rightHand);
+      const result = DataValidator.compareString(leftHand, rightHand);
       expect(result).toBeTruthy();
     });
   });

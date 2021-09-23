@@ -1,3 +1,5 @@
+import { JwtPayload } from 'jsonwebtoken';
+
 export interface ILogin {
   email: string;
   password: string;
@@ -20,4 +22,12 @@ export interface IResponse {
 
 export interface IPublicUserData extends Omit<IUser, 'password'> {
   uid: string;
+}
+
+export interface IDecoded extends JwtPayload, IPublicUserData {}
+
+export interface ITokenDB {
+  uid: string;
+  token: string;
+  isUsed?: boolean;
 }

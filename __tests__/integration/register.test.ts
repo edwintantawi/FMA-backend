@@ -19,7 +19,7 @@ afterAll(async () => {
   await DatabaseHelper.disconnectDB();
 });
 
-describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
+describe(`Test auth registration endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
   afterEach(async () => {
     await DatabaseHelper.clearCollections();
   });
@@ -32,7 +32,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_REQUEST);
     expect(error).toBe(true);
@@ -48,7 +48,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_REQUEST);
     expect(error).toBe(true);
@@ -64,7 +64,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_REQUEST);
     expect(error).toBe(true);
@@ -80,7 +80,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_REQUEST);
     expect(error).toBe(true);
@@ -96,7 +96,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_REQUEST);
     expect(error).toBe(true);
@@ -112,7 +112,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_DATA);
     expect(error).toBe(true);
@@ -128,7 +128,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_DATA);
     expect(error).toBe(true);
@@ -144,7 +144,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_DATA);
     expect(error).toBe(true);
@@ -160,7 +160,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_DATA);
     expect(error).toBe(true);
@@ -176,7 +176,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
       .send(reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data }: IResponse = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.ERR_BAD_DATA);
     expect(error).toBe(true);
@@ -194,9 +194,9 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
     const response = await AuthHelper.registerUser(app, reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data } = body;
+    const { error, message, data } = body as IResponse;
 
-    expect(message).toBe(EMessages.ERR_USER_EXIST);
+    expect(message).toBe(EMessages.ERR_USER_ALREADY_EXIST);
     expect(statusCode).toBe(401);
     expect(error).toBeTruthy();
     expect(data).toBe(null);
@@ -219,7 +219,7 @@ describe(`Test auth endpoint [POST | ${endpoints.AUTH_REGISTER}]`, () => {
     const response = await AuthHelper.registerUser(app, reqBody);
 
     const { statusCode, body } = response;
-    const { error, message, data } = body;
+    const { error, message, data } = body as IResponse;
 
     expect(message).toBe(EMessages.OK_REGISTER);
     expect(statusCode).toBe(201);

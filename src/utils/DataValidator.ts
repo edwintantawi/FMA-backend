@@ -31,7 +31,7 @@ export class DataValidator {
     return true;
   }
 
-  static compare(leftHand: string, rightHand: string): boolean {
+  static compareString(leftHand: string, rightHand: string): boolean {
     return leftHand === rightHand;
   }
 }

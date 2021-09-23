@@ -129,6 +129,6 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
     );
 
     expect(accessTokenCookie?.value).toBeTruthy();
-    expect(refreshTokenCookie?.value).toBeFalsy();
+    expect(refreshTokenCookie?.value).toBeTruthy();
   });
 });

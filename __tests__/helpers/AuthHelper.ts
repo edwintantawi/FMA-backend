@@ -1,7 +1,7 @@
 import { Application } from 'express';
 import request from 'supertest';
 import { endpoints } from '.';
-import { IRegister } from '../../src/typings';
+import { ILogin, IRegister } from '../../src/typings';
 
 export class AuthHelper {
   static async registerUser(
@@ -11,6 +11,15 @@ export class AuthHelper {
     const response = await request(app)
       .post(endpoints.AUTH_REGISTER)
       .send(reqBody);
+
+    return response;
+  }
+
+  static async loginUser(
+    app: Application,
+    reqBody: ILogin
+  ): Promise<request.Response> {
+    const response = await request(app).post(endpoints.AUTH).send(reqBody);
 
     return response;
   }

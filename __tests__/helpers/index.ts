@@ -3,3 +3,4 @@ export * from './RequestHelper';
 export * from './dataHelper';
 export * from './DatabaseHelper';
 export * from './AuthHelper';
+export * from './CookiesHelper';

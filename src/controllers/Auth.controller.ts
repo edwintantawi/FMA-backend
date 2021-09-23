@@ -161,4 +161,8 @@ export class AuthController {
       return res.status(500).json(response);
     }
   }
+
+  static async auth(req: Request, res: Response) {
+    return res.status(200).json({ message: 'ok' });
+  }
 }

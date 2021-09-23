@@ -1,7 +1,4 @@
-interface IKeyValue {
-  key: string;
-  value: string;
-}
+import { IKeyValue } from '../typings';
 
 export class Cookies {
   static getCookies(stringCookies: string[] | undefined): IKeyValue[] {

@@ -9,7 +9,13 @@ import {
 } from '../../src/typings';
 import { Cookies } from '../../src/utils';
 import { app } from '../appSetup';
-import { AuthHelper, DatabaseHelper, endpoints, mockUser } from '../helpers';
+import {
+  AuthHelper,
+  CookiesHalper,
+  DatabaseHelper,
+  endpoints,
+  mockUser,
+} from '../helpers';
 
 beforeAll(async () => {
   await DatabaseHelper.disconnectDB();
@@ -107,6 +113,8 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
     const { statusCode, body, headers } = response;
     const { error, message, data } = body as IResponse;
     const cookies = Cookies.getCookies(headers['set-cookie']);
+    const { accessToken, refreshToken } =
+      CookiesHalper.getTokenCookies(cookies);
 
     expect(message).toBe(EMessages.OK_LOGIN);
     expect(statusCode).toBe(200);
@@ -121,20 +129,12 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
 
     expect(data).toStrictEqual(expectData);
 
-    const accessTokenCookie = cookies.find(
-      (cookie) => cookie.key === CONFIG.jwtAccessTokenName
-    );
-
-    const refreshTokenCookie = cookies.find(
-      (cookie) => cookie.key === CONFIG.jwtRefreshTokenName
-    );
-
-    expect(accessTokenCookie?.value).toBeTruthy();
-    expect(refreshTokenCookie?.value).toBeTruthy();
+    expect(accessToken).toBeTruthy();
+    expect(refreshToken).toBeTruthy();
 
     const savedToken = await TokenModel.findOne({
       uid: data.uid,
-      token: refreshTokenCookie?.value,
+      token: refreshToken,
       isUsed: false,
     });
     expect(savedToken).toBeTruthy();

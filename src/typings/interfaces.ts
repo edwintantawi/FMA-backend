@@ -1,4 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
+import { Request } from 'express';
 
 export interface ILogin {
   email: string;
@@ -30,4 +31,13 @@ export interface ITokenDB {
   uid: string;
   token: string;
   isUsed?: boolean;
+}
+
+export interface IKeyValue {
+  key: string;
+  value: string;
+}
+
+export interface extendRequest extends Request {
+  userData?: IPublicUserData;
 }

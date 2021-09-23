@@ -29,8 +29,6 @@ export class App {
   }
 
   middlewares(): void {
-    console.log('App : Middlewares is ready');
-
     this.app.use(helmet());
     this.app.use(cors(this.corsOptions));
     this.app.use(express.json());
@@ -40,15 +38,11 @@ export class App {
   }
 
   settings(): void {
-    console.log('App : Settings is ready');
-
     this.app.set('views', path.join(__dirname, 'views'));
     this.app.set('view engine', 'ejs');
   }
 
   routes(): void {
-    console.log('App : Routes is ready');
-
     const appRoutes = new AppRoutes(this.app);
     appRoutes.setup();
   }

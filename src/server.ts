@@ -7,15 +7,15 @@ const server = new App({
 });
 
 const listenCallback = () => {
-  const listenMessage = `Server : Server running succesfuly at http://localhost:${ENV.port}`;
+  const listenMessage = `Server : Server running succesfuly at http://localhost:${CONFIG.port}`;
   console.log(listenMessage);
 };
 
 // connect to database (MongoDB) and start server
-mongoose.connect(ENV.mongoDbUrl, { dbName: ENV.mongoDbName });
+mongoose.connect(CONFIG.mongoDbUrl, { dbName: CONFIG.mongoDbName });
 mongoose.connection
   .on('open', () => {
     console.log('MonggoDB : Connection Success');
-    server.listen(ENV.port, listenCallback);
+    server.listen(CONFIG.port, listenCallback);
   })
   .on('error', () => console.log('MonggoDB : Connection Error'));

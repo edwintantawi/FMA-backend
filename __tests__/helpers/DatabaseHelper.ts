@@ -1,11 +1,11 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import mongoose from 'mongoose';
-import { ENV } from '../../src/config';
+import { CONFIG } from '../../src/config';
 
 export class DatabaseHelper {
   static async connectDB() {
-    await mongoose.connect(ENV.mongoDbUrl, { dbName: ENV.mongoDbName });
+    await mongoose.connect(CONFIG.mongoDbUrl, { dbName: CONFIG.mongoDbName });
   }
 
   static async clearCollections() {

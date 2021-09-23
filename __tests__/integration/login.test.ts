@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { CONFIG } from '../../src/config';
-import { UserModel } from '../../src/models';
 import {
   EMessages,
   ILogin,

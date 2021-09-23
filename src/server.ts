@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { App } from './App';
-import { CONFIG, ENV } from './config';
+import { CONFIG } from './config';
 
 const server = new App({
   corsOptions: CONFIG.corsOptions,

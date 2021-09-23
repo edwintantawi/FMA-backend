@@ -21,8 +21,8 @@ const corsOptions: CorsOptions = {
 };
 
 const jwtOptions = {
-  jwtAccessTokenName: 'AccessToken',
-  jwtRefreshTokenName: 'RefreshToken',
+  jwtAccessTokenName: 'accessToken',
+  jwtRefreshTokenName: 'refreshToken',
   jwtAccesTokenExpired: 1000 * 10, // 10 seconds
   jwtRefreshTokenExpired: 1000 * 60 * 60 * 24 * 31, // 31 days
 };

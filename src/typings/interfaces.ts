@@ -39,5 +39,10 @@ export interface IKeyValue {
 }
 
 export interface extendRequest extends Request {
-  userData?: IPublicUserData;
+  authPayload?: IPublicUserData;
+}
+
+export interface IAuthToken {
+  accessToken: string | undefined;
+  refreshToken: string | undefined;
 }

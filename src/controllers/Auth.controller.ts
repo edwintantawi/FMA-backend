@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { DataValidator, Bcrypt, Jwt } from '../utils';
+import { DataValidator, Bcrypt, Jwt, Cookies } from '../utils';
 import { TokenModel, UserModel } from '../models';
 import {
   EMessages,
+  extendRequest,
   ILogin,
   IPublicUserData,
   IRegister,
@@ -10,7 +11,6 @@ import {
   ITokenDB,
   IUser,
 } from '../typings';
-import { CONFIG } from '../config';
 
 export class AuthController {
   static async register(req: Request, res: Response) {
@@ -103,7 +103,7 @@ export class AuthController {
       if (!user) {
         const response: IResponse = {
           error: true,
-          message: EMessages.ERR_LOGIN_USER_NOT_FOUND,
+          message: EMessages.ERR_USER_NOT_FOUND,
           data: null,
         };
         return res.status(401).json(response);
@@ -142,8 +142,7 @@ export class AuthController {
       };
       await TokenModel.create(tokenDoc);
       // serve access & refresh token to client
-      res.cookie(CONFIG.jwtAccessTokenName, accessToken);
-      res.cookie(CONFIG.jwtRefreshTokenName, refreshToken);
+      Cookies.setTokenCookies(res, { accessToken, refreshToken });
 
       const response: IResponse = {
         error: false,
@@ -162,7 +161,14 @@ export class AuthController {
     }
   }
 
-  static async auth(req: Request, res: Response) {
-    return res.status(200).json({ message: 'ok' });
+  static async auth(req: extendRequest, res: Response) {
+    const { authPayload } = req;
+
+    const response: IResponse = {
+      error: false,
+      message: EMessages.OK_AUTH,
+      data: authPayload,
+    };
+    return res.status(200).json(response);
   }
 }

@@ -19,7 +19,9 @@ export class AuthHelper {
     app: Application,
     reqBody: ILogin
   ): Promise<request.Response> {
-    const response = await request(app).post(endpoints.AUTH).send(reqBody);
+    const response = await request(app)
+      .post(endpoints.AUTH_LOGIN)
+      .send(reqBody);
 
     return response;
   }

@@ -15,16 +15,18 @@ describe('Test JWT method', () => {
     expect(typeof accessToken).toBe('string');
     expect(typeof refreshToken).toBe('string');
 
-    const accessTokenPayload = Jwt.vertifyToken(
+    const vertifyAccess = Jwt.vertifyToken(
       accessToken,
       CONFIG.jwtAccessTokenKey
     );
-    const refreshTokenPayload = Jwt.vertifyToken(
+    const vertifyRefresh = Jwt.vertifyToken(
       refreshToken,
       CONFIG.jwtRefreshTokenKey
     );
 
-    expect(accessTokenPayload).toMatchObject(payload);
-    expect(refreshTokenPayload).toMatchObject(payload);
+    expect(vertifyAccess.error).toBeFalsy();
+    expect(vertifyRefresh.error).toBeFalsy();
+    expect(vertifyAccess.payload).toMatchObject(payload);
+    expect(vertifyRefresh.payload).toMatchObject(payload);
   });
 });

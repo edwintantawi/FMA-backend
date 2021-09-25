@@ -1,4 +1,6 @@
-import { IKeyValue } from '../typings';
+import { Response } from 'express';
+import { CONFIG } from '../config';
+import { IAuthToken, IKeyValue } from '../typings';
 
 export class Cookies {
   static getCookies(stringCookies: string[] | undefined): IKeyValue[] {
@@ -9,5 +11,15 @@ export class Cookies {
       return { key, value: value.slice(0, -1) };
     });
     return cookies;
+  }
+
+  static cleanTokenCookies(res: Response): void {
+    res.clearCookie(CONFIG.jwtAccessTokenName);
+    res.clearCookie(CONFIG.jwtRefreshTokenName);
+  }
+
+  static setTokenCookies(res: Response, tokens: IAuthToken) {
+    res.cookie(CONFIG.jwtAccessTokenName, tokens.accessToken);
+    res.cookie(CONFIG.jwtRefreshTokenName, tokens.refreshToken);
   }
 }

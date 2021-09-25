@@ -1,5 +1,4 @@
 import request from 'supertest';
-import { CONFIG } from '../../src/config';
 import { TokenModel } from '../../src/models';
 import {
   EMessages,
@@ -11,7 +10,7 @@ import { Cookies } from '../../src/utils';
 import { app } from '../appSetup';
 import {
   AuthHelper,
-  CookiesHalper,
+  CookiesHelper,
   DatabaseHelper,
   endpoints,
   mockUser,
@@ -75,7 +74,7 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
     const { statusCode, body } = response;
     const { error, message, data } = body as IResponse;
 
-    expect(message).toBe(EMessages.ERR_LOGIN_USER_NOT_FOUND);
+    expect(message).toBe(EMessages.ERR_USER_NOT_FOUND);
     expect(statusCode).toBe(401);
     expect(error).toBeTruthy();
     expect(data).toBe(null);
@@ -114,7 +113,7 @@ describe(`Test auth login endpoint [POST | ${endpoints.AUTH_LOGIN}]`, () => {
     const { error, message, data } = body as IResponse;
     const cookies = Cookies.getCookies(headers['set-cookie']);
     const { accessToken, refreshToken } =
-      CookiesHalper.getTokenCookies(cookies);
+      CookiesHelper.getTokenCookies(cookies);
 
     expect(message).toBe(EMessages.OK_LOGIN);
     expect(statusCode).toBe(200);

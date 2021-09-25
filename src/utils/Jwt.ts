@@ -1,7 +1,12 @@
 /* eslint-disable class-methods-use-this */
-import jsonWebToken from 'jsonwebtoken';
+import jsonWebToken, { JwtPayload } from 'jsonwebtoken';
 import { CONFIG } from '../config';
-import { IDecoded } from '../typings';
+
+interface IVertifyTokenResult {
+  error: boolean;
+  errorName: null | string;
+  payload: JwtPayload | null;
+}
 
 export class Jwt {
   static createTokens(payload: any) {
@@ -10,12 +15,24 @@ export class Jwt {
     return { accessToken, refreshToken };
   }
 
-  static vertifyToken(token: string, key: string): IDecoded | null {
-    let decodedData = null;
+  static vertifyToken(token: string, key: string): IVertifyTokenResult {
+    const result: IVertifyTokenResult = {
+      error: true,
+      errorName: null,
+      payload: null,
+    };
+
     jsonWebToken.verify(token, key, (error, decoded) => {
-      if (!error) decodedData = decoded;
+      if (error) {
+        result.errorName = error.name;
+      }
+      if (decoded) {
+        result.error = false;
+        result.payload = decoded;
+      }
     });
-    return decodedData;
+
+    return result;
   }
 
   static createAccessToken(payload: any) {

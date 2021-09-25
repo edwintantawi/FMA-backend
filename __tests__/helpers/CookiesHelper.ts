@@ -1,13 +1,8 @@
 import { CONFIG } from '../../src/config';
-import { IKeyValue } from '../../src/typings';
+import { IAuthToken, IKeyValue } from '../../src/typings';
 
-interface ITokens {
-  accessToken: string | undefined;
-  refreshToken: string | undefined;
-}
-
-export class CookiesHalper {
-  static getTokenCookies(cookies: IKeyValue[]): ITokens {
+export class CookiesHelper {
+  static getTokenCookies(cookies: IKeyValue[]): IAuthToken {
     const accessToken = cookies.find(
       (cookie) => cookie.key === CONFIG.jwtAccessTokenName
     )?.value;
